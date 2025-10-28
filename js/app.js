@@ -1,13 +1,28 @@
 import { db } from './guitarras.js'
 
-// forEach para mostrar cada guitarra
+/*console.log(db[0].id)
+console.log(db[10].nombre)
+console.log(db[5].imagen) */
+
+// for(let i = 0; i < db.length; i++){
+//     console.log(db[i].nombre)
+// }
+
+/*
+const saluda = (name) => {
+    console.log('hello' + name)
+}
+saluda('mundo') */ 
+
+//metodos de Arrays para Iterar
 db.forEach(
     function(guitar){
         console.log(guitar)
     }
 )
 
-const carrito = []
+let carrito = []
+
 
 const creaCard = (guitar) => {
     const div = document.createElement('div')
@@ -50,7 +65,7 @@ const createCarr = (carrito) => {
                         <tbody>`
     carrito.forEach(g => {
         total += g.precio * g.cantidad
-        html += `<tr>
+        html += `<tr data-id="${g.id}">
                                 <td>
                                     <img class="img-fluid" src="./img/${g.imagen}.jpg" alt="imagen guitarra">
                                 </td>
@@ -108,7 +123,7 @@ const buttonClicked = (e) => {
                 cantidad: 1
             })
         }else {
-            carrito[idCarrito.cantidad++]
+            carrito[idCarrito].cantidad++
         }
         createCarr(carrito)
     }
@@ -118,6 +133,26 @@ const carritoClicked = (f) => {
     if (f.target.classList.contains('btn')) {
         const btn = f.target.innerText
         console.log(btn)
+        const idCarrito = f.target.parentElement.parentElement.getAttribute('data-id')
+        console.log(idCarrito)
+        const idxCarrito = carrito.findIndex(g => g.id === Number(idCarrito))
+        if (btn === '-') {
+            if (carrito[idxCarrito].cantidad  > 1) {
+                carrito[idxCarrito].cantidad--    
+            }
+            
+        }else if (btn === '+') {
+            if (carrito[idxCarrito].cantidad < 10) {
+                carrito[idxCarrito].cantidad++    
+            }
+             
+        }else if (btn === 'X') {
+            carrito = carrito.filter(g => g.id != Number(idCarrito))
+            
+        }else if (btn === 'Vaciar carrito'.toUpperCase()) {
+            carrito = []
+        }
+        createCarr(carrito)
     }
 }
 
