@@ -23,6 +23,7 @@ db.forEach(
 
 let carrito = []
 
+const btnVai = document.querySelector('#vai')
 
 const creaCard = (guitar) => {
     const div = document.createElement('div')
@@ -152,8 +153,22 @@ const carritoClicked = (f) => {
         }else if (btn === 'Vaciar carrito'.toUpperCase()) {
             carrito = []
         }
+        setLocalSotrage()
         createCarr(carrito)
     }
+}
+
+const getLocalStorage = () => {
+    const carritoStorage = localStorage.getItem('carrito')
+    if (carritoStorage) {
+        carrito = JSON.parse(carritoStorage)
+    }else{
+        carrito = []
+    }
+}
+
+const setLocalSotrage = () => {
+    localStorage.setItem('carrito', JSON.stringify(carrito))
 }
 
 db.forEach((guitar) => {
@@ -161,7 +176,10 @@ db.forEach((guitar) => {
     container.appendChild(creaCard(guitar))
 }
 )
+
+getLocalStorage()
 createCarr(carrito)
 
 container.addEventListener('click',buttonClicked)
 carritoContainer.addEventListener('click',carritoClicked)
+btnVai.addEventListener('click', buttonClicked)
