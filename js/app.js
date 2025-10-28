@@ -1,22 +1,6 @@
-
-
 import { db } from './guitarras.js'
 
-/*console.log(db[0].id)
-console.log(db[10].nombre)
-console.log(db[5].imagen) */
-
-// for(let i = 0; i < db.length; i++){
-//     console.log(db[i].nombre)
-// }
-
-/*
-const saluda = (name) => {
-    console.log('hello' + name)
-}
-saluda('mundo') */ 
-
-//metodos de Arrays para Iterar
+// forEach para mostrar cada guitarra
 db.forEach(
     function(guitar){
         console.log(guitar)
@@ -24,7 +8,6 @@ db.forEach(
 )
 
 const carrito = []
-
 
 const creaCard = (guitar) => {
     const div = document.createElement('div')
@@ -47,27 +30,94 @@ const creaCard = (guitar) => {
     return div
 }
 
+const createCarr = (carrito) => {
+    const p = document.createElement('p')
+    p.className = 'text-center'
+    p.innerText= 'El carrito está vacio'
+    let total = 0   
+    const div = document.createElement('div')
+    let html = `
+                    <table class="w-100 table">
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>`
+    carrito.forEach(g => {
+        total += g.precio * g.cantidad
+        html += `<tr>
+                                <td>
+                                    <img class="img-fluid" src="./img/${g.imagen}.jpg" alt="imagen guitarra">
+                                </td>
+                                <td>${g.nombre}</td>
+                                <td class="fw-bold">
+                                        $${g.precio}
+                                </td>
+                                <td class="flex align-items-start gap-4">
+                                    <button
+                                        type="button"
+                                        class="btn btn-dark"
+                                    >-</button>
+                                        ${g.cantidad}
+                                    <button
+                                        type="button"
+                                        class="btn btn-dark"
+                                    >+</button>
+                                </td>
+                                <td>
+                                    <button
+                                        class="btn btn-danger"
+                                        type="button"
+                                    >X</button>
+                                </td>
+                            </tr>`
+    })
+    html += `</tbody>
+            </table>
+
+            <p class="text-end">Total pagar: <span class="fw-bold"> $${total}</span></p>
+            <button class="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>
+    `
+    div.innerHTML = html
+    if(carrito.length === 0){
+        carritoContainer.innerHTML = ''
+        carritoContainer.appendChild(p)
+
+    }else{
+        carritoContainer.innerHTML = ''
+        carritoContainer.appendChild(div)
+    }
+}
+
 const container = document.querySelector('main div')
+const carritoContainer = document.querySelector('#carrito')
 
 const buttonClicked = (e) => {
-
     if (e.target.classList.contains('btn')) {
-        const dataId = e.target.getAttribute('data-id')
-        //verificar si existe "guitar" en carrito
-        const idCarrito = carrito.findIndex(g => g.id === Number(dataId)) 
-        //si no crear un objeto nuevo
-        if(idCarrito === -1){
+        const dataID = e.target.getAttribute('data-id')
+        const idCarrito = carrito.findIndex(g => g.id === Number(dataID))
+        
+        if (idCarrito === -1) {
             carrito.push({
-                ...db[Number(dataId) - 1],
-                cantidad : 1
+                ...db[Number(dataID) - 1],
+                cantidad: 1
             })
         }else {
-            //si si incrementa cantidad
-            carrito[idCarrito].cantidad++
+            carrito[idCarrito.cantidad++]
         }
-        
-        
-        console.log(carrito)
+        createCarr(carrito)
+    }
+}
+
+const carritoClicked = (f) => {
+    if (f.target.classList.contains('btn')) {
+        const btn = f.target.innerText
+        console.log(btn)
     }
 }
 
@@ -76,5 +126,7 @@ db.forEach((guitar) => {
     container.appendChild(creaCard(guitar))
 }
 )
+createCarr(carrito)
 
 container.addEventListener('click',buttonClicked)
+carritoContainer.addEventListener('click',carritoClicked)
