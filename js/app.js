@@ -1,3 +1,5 @@
+
+
 import { db } from './guitarras.js'
 
 /*console.log(db[0].id)
@@ -20,6 +22,8 @@ db.forEach(
         console.log(guitar)
     }
 )
+
+const carrito = []
 
 
 const creaCard = (guitar) => {
@@ -49,8 +53,21 @@ const buttonClicked = (e) => {
 
     if (e.target.classList.contains('btn')) {
         const dataId = e.target.getAttribute('data-id')
-        console.log(db[Number(dataId) - 1])
-        console.log("lol")
+        //verificar si existe "guitar" en carrito
+        const idCarrito = carrito.findIndex(g => g.id === Number(dataId)) 
+        //si no crear un objeto nuevo
+        if(idCarrito === -1){
+            carrito.push({
+                ...db[Number(dataId) - 1],
+                cantidad : 1
+            })
+        }else {
+            //si si incrementa cantidad
+            carrito[idCarrito].cantidad++
+        }
+        
+        
+        console.log(carrito)
     }
 }
 
